@@ -2,6 +2,8 @@
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -13,22 +15,75 @@ console.log('App Running!');
 var IndecisionApp = function (_React$Component) {
   _inherits(IndecisionApp, _React$Component);
 
-  function IndecisionApp() {
+  function IndecisionApp(props) {
     _classCallCheck(this, IndecisionApp);
 
-    return _possibleConstructorReturn(this, (IndecisionApp.__proto__ || Object.getPrototypeOf(IndecisionApp)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (IndecisionApp.__proto__ || Object.getPrototypeOf(IndecisionApp)).call(this, props));
+
+    _this.handlePick = _this.handlePick.bind(_this);
+    _this.handleDeleteOptions = _this.handleDeleteOptions.bind(_this);
+    _this.handleAddOption = _this.handleAddOption.bind(_this);
+
+    _this.state = {
+      options: ['One', 'Two', 'Three']
+    };
+
+    console.log('Options', _this.state.options);
+    return _this;
   }
 
   _createClass(IndecisionApp, [{
+    key: 'handlePick',
+    value: function handlePick() {
+      var randomNum = Math.floor(Math.random() * this.state.options.length);
+      var option = this.state.options[randomNum];
+      alert(option);
+    }
+  }, {
+    key: 'handleDeleteOptions',
+    value: function handleDeleteOptions() {
+      this.setState(function () {
+        return {
+          options: []
+        };
+      });
+    }
+  }, {
+    key: 'handleAddOption',
+    value: function handleAddOption(e) {
+      e.preventDefault();
+      var option = e.target.elements.option.value;
+
+      if (option) {
+        this.setState(function (prevState) {
+          console.log('prevState', prevState);
+          return {
+            options: [].concat(_toConsumableArray(prevState.options), [option])
+          };
+        });
+      }
+
+      e.target.elements.option.value = '';
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var title = 'Indecision';
+      var subtitle = 'Put your life in the hands of a computer!';
+
       return React.createElement(
         'div',
         null,
-        React.createElement(Header, null),
-        React.createElement(Action, null),
-        React.createElement(AddOption, null),
-        React.createElement(Options, null)
+        React.createElement(Header, { title: title, subtitle: subtitle }),
+        React.createElement(Action, {
+          hasOptions: this.state.options.length > 0,
+          handlePick: this.handlePick
+        }),
+        React.createElement(Options, {
+          options: this.state.options,
+          handleDeleteOptions: this.handleDeleteOptions
+        }),
+        React.createElement(AddOption, { handleAddOption: this.handleAddOption })
       );
     }
   }]);
@@ -56,12 +111,12 @@ var Header = function (_React$Component2) {
         React.createElement(
           'h1',
           null,
-          'Indecision App'
+          this.props.title
         ),
         React.createElement(
           'h2',
           null,
-          'Put your life in the hands of a computer!'
+          this.props.subtitle
         )
       );
     }
@@ -89,7 +144,7 @@ var Action = function (_React$Component3) {
         null,
         React.createElement(
           'button',
-          null,
+          { disabled: !this.props.hasOptions, onClick: this.props.handlePick },
           'What should I do?'
         )
       );
@@ -113,15 +168,19 @@ var Options = function (_React$Component4) {
   _createClass(Options, [{
     key: 'render',
     value: function render() {
+      console.log('Options Component', this.props.options);
+
       return React.createElement(
         'div',
         null,
         React.createElement(
-          'p',
-          null,
-          'Options Component here'
+          'button',
+          { onClick: this.props.handleDeleteOptions },
+          'Remove All'
         ),
-        React.createElement(Option, null)
+        this.props.options.map(function (option) {
+          return React.createElement(Option, { key: option, optionText: option });
+        })
       );
     }
   }]);
@@ -146,11 +205,7 @@ var Option = function (_React$Component5) {
       return React.createElement(
         'div',
         null,
-        React.createElement(
-          'p',
-          null,
-          'Option Component here'
-        )
+        this.props.optionText
       );
     }
   }]);
@@ -176,9 +231,14 @@ var AddOption = function (_React$Component6) {
         'div',
         null,
         React.createElement(
-          'p',
-          null,
-          'AddOption Component here'
+          'form',
+          { onSubmit: this.props.handleAddOption },
+          React.createElement('input', { type: 'text', name: 'option' }),
+          React.createElement(
+            'button',
+            null,
+            'Submit'
+          )
         )
       );
     }
