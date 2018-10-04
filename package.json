@@ -5,8 +5,25 @@
   "repository": "https://github.com/HeresJohnny5/reactIndecision.git",
   "author": "John Erickson",
   "license": "MIT",
+  "scripts": {
+    "serve": "live-server public/",
+    "build": "webpack --watch",
+    "build-babel": "babel src/app.js --out-file=public/scripts/app.js --presets=env,react --watch"
+  },
   "dependencies": {
-    "babel-preset-env": "1.5.2",
-    "babel-preset-react": "6.24.1"
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-cli": "6.24.1",
+    "babel-loader": "^8.0.4",
+    "live-server": "^1.2.0",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "validator": "^10.8.0",
+    "webpack": "^4.20.2",
+    "webpack-dev-server": "^3.1.9"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.1.2"
   }
 }
