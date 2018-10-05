@@ -1,0 +1,11 @@
+// by default 1rem = 16px
+// 16 * 62.5 = 10 which creates a base 10 system. For example 1.6 * 10 = 16
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1.6rem;
+}
