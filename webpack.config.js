@@ -13,5 +13,9 @@ module.exports = {
       test: /\.js$/,
       exclude: /node_modules/
     }]
+  },
+  devtool: 'cheap-eval-source-map',
+  devServer: {
+    contentBase: path.join(__dirname, 'public')
   }
 };
